@@ -9,6 +9,7 @@ public class SendGiftBody {
     private String giftName;
     private int giftType;
     private int num;
+    private int price;
 
     private FansMedalBody fansMedalBody;
 
@@ -68,6 +69,14 @@ public class SendGiftBody {
         this.num = num;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public FansMedalBody getFansMedalBody() {
         return fansMedalBody;
     }
@@ -86,6 +95,7 @@ public class SendGiftBody {
                 ", giftName='" + giftName + '\'' +
                 ", giftType=" + giftType +
                 ", num=" + num +
+                ", price=" + price +
                 ", fansMedalBody=" + fansMedalBody +
                 '}';
     }

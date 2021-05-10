@@ -29,6 +29,7 @@ public class SendGiftResolver extends Resolver {
             sendGiftBody.setGiftName((String) dataMap.get("giftName"));
             sendGiftBody.setGiftType((int) dataMap.get("giftType"));
             sendGiftBody.setNum((int) dataMap.get("num"));
+            sendGiftBody.setPrice((int) dataMap.get("price"));
 
             sendGiftBody.setFansMedalBody(new FansMedalBody());
 
