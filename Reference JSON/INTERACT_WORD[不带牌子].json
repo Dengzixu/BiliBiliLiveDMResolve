@@ -1,0 +1,37 @@
+{
+    "cmd":"INTERACT_WORD",
+    "data":{
+        "uid":282256314,
+        "uname":"我部悍将刘三砍刀",
+        "uname_color":"",
+        "identities":[
+            1
+        ],
+        "msg_type":1,
+        "roomid":14047,
+        "timestamp":1619144764,
+        "score":1619144764124,
+        "fans_medal":{
+            "target_id":0,
+            "medal_level":0,
+            "medal_name":"",
+            "medal_color":0,
+            "medal_color_start":0,
+            "medal_color_end":0,
+            "medal_color_border":0,
+            "is_lighted":0,
+            "guard_level":0,
+            "special":"",
+            "icon_id":0,
+            "anchor_roomid":0,
+            "score":0
+        },
+        "is_spread":0,
+        "spread_info":"",
+        "contribution":{
+            "grade":0
+        },
+        "spread_desc":"",
+        "tail_icon":0
+    }
+}

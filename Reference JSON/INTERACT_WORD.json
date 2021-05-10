@@ -1,0 +1,39 @@
+{
+    "cmd": "INTERACT_WORD",
+    "data": {
+        "uid": 4283693,
+        "uname": "too_long_name",
+        "uname_color": "",
+        "identities": [
+            5,
+            3,
+            1
+        ],
+        "msg_type": 1,
+        "roomid": 77274,
+        "timestamp": 1619152790,
+        "score": 1669188198765,
+        "fans_medal": {
+            "target_id": 25644004,
+            "medal_level": 25,
+            "medal_name": "北极猫",
+            "medal_color": 398668,
+            "medal_color_start": 398668,
+            "medal_color_end": 6850801,
+            "medal_color_border": 6809855,
+            "is_lighted": 1,
+            "guard_level": 3,
+            "special": "",
+            "icon_id": 0,
+            "anchor_roomid": 3080147,
+            "score": 50025408
+        },
+        "is_spread": 0,
+        "spread_info": "",
+        "contribution": {
+            "grade": 0
+        },
+        "spread_desc": "",
+        "tail_icon": 0
+    }
+}
