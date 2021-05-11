@@ -5,11 +5,11 @@ import net.dengzixu.java.payload.body.Body;
 
 import java.util.Map;
 
-public abstract class Resolver {
+public abstract class BodyResolver {
     protected Map<String, Object> payloadMap;
     protected String payloadCmd;
 
-    public Resolver(Map<String, Object> payloadMap) {
+    public BodyResolver(Map<String, Object> payloadMap) {
         this.payloadMap = payloadMap;
 
         if (null == payloadMap) {

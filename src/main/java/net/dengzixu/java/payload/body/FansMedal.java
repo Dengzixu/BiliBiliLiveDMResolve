@@ -1,6 +1,6 @@
 package net.dengzixu.java.payload.body;
 
-public class FansMedalBody {
+public class FansMedal {
     private int medalLevel;
     private String medalName;
     private int medalColor;

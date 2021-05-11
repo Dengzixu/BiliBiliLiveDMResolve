@@ -1,9 +1,6 @@
 package net.dengzixu.java.payload.body;
 
 public class SendGiftBody {
-    private String uname;
-    private long uid;
-
     private String coinType;
     private int giftId;
     private String giftName;
@@ -11,23 +8,8 @@ public class SendGiftBody {
     private int num;
     private int price;
 
-    private FansMedalBody fansMedalBody;
-
-    public String getUname() {
-        return uname;
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
-
-    public long getUid() {
-        return uid;
-    }
-
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
+    private UserInfo userInfo;
+    private FansMedal fansMedal;
 
     public String getCoinType() {
         return coinType;
@@ -77,20 +59,18 @@ public class SendGiftBody {
         this.price = price;
     }
 
-    public FansMedalBody getFansMedalBody() {
-        return fansMedalBody;
+    public FansMedal getFansMedal() {
+        return fansMedal;
     }
 
-    public void setFansMedalBody(FansMedalBody fansMedalBody) {
-        this.fansMedalBody = fansMedalBody;
+    public void setFansMedal(FansMedal fansMedal) {
+        this.fansMedal = fansMedal;
     }
 
     @Override
     public String toString() {
         return "SendGiftBody{" +
-                "uname='" + uname + '\'' +
-                ", uid=" + uid +
-                ", coinType='" + coinType + '\'' +
+                "coinType='" + coinType + '\'' +
                 ", giftId=" + giftId +
                 ", giftName='" + giftName + '\'' +
                 ", giftType=" + giftType +
