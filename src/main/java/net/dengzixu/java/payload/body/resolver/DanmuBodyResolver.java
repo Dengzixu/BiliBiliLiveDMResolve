@@ -9,7 +9,7 @@ import net.dengzixu.java.payload.constant.BodyType;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class DanmuBodyResolver extends Resolver {
+public class DanmuBodyResolver extends BodyResolver {
     private static final String CMD = BodyType.DANMU_MSG;
 
     public DanmuBodyResolver(Map<String, Object> payloadMap) {

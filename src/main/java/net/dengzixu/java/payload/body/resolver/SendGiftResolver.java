@@ -7,7 +7,7 @@ import net.dengzixu.java.payload.constant.BodyType;
 
 import java.util.Map;
 
-public class SendGiftResolver extends Resolver {
+public class SendGiftResolver extends BodyResolver {
     public SendGiftResolver(Map<String, Object> payloadMap) {
         super(payloadMap);
     }

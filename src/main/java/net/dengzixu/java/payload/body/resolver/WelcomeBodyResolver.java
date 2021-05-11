@@ -8,7 +8,7 @@ import net.dengzixu.java.payload.constant.BodyType;
 
 import java.util.Map;
 
-public class WelcomeBodyResolver extends Resolver {
+public class WelcomeBodyResolver extends BodyResolver {
     private static final String CMD = BodyType.INTERACT_WORD;
 
     public WelcomeBodyResolver(Map<String, Object> payloadMap) {

@@ -1,6 +1,5 @@
-package net.dengzixu.java.protocol;
+package net.dengzixu.java.packet;
 
-import net.dengzixu.java.packet.Packet;
 import net.dengzixu.java.utils.ZlibUtil;
 
 import java.nio.ByteBuffer;
@@ -24,8 +23,6 @@ public class PacketResolve {
     }
 
     public List<Packet> getPacketList() {
-//        System.out.println("Raw Packet length: " + rawDataLength);
-
         // 根据传入的数据分配空间
         final ByteBuffer byteBuffer = ByteBuffer.allocate(rawDataLength);
 
@@ -61,13 +58,12 @@ public class PacketResolve {
         // 根据 Protocol Version 进行处理
         switch (resultPacketList.get(0).getProtocolVersion()) {
             // 如果协议版本为 0 或 1 直接返回
-            case BiliBiliLiveDMProtocol.PROTOCOL_VERSION_0:
-            case BiliBiliLiveDMProtocol.PROTOCOL_VERSION_1:
+            case ProtocolVersion.PROTOCOL_VERSION_0:
+            case ProtocolVersion.PROTOCOL_VERSION_1:
                 break;
             // 如果协议版本为 2 就解压一下
-            case BiliBiliLiveDMProtocol.PROTOCOL_VERSION_2:
+            case ProtocolVersion.PROTOCOL_VERSION_2:
                 byte[] compressedData = ZlibUtil.inflate(resultPacketList.get(0).getPayload());
-//                System.out.println(Arrays.toString(compressedData));
                 // 递归一把梭
                 resultPacketList = new PacketResolve(compressedData).getPacketList();
                 break;

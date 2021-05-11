@@ -29,12 +29,6 @@ public class PayloadResolver {
     public Body resolve() {
         Body result = new Body();
 
-        Body unknownResult = new Body() {{
-            setType(BodyType.UNKNOWN);
-            setBodyClass(null);
-            setBody(null);
-        }};
-
         switch (operation) {
             case Operation.OPERATION_3: {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(payload.length).put(payload);
@@ -55,25 +49,25 @@ public class PayloadResolver {
                 }
 
                 // 根据 cmd 解析
-                Resolver resolver;
+                BodyResolver bodyResolver;
+
                 switch ((String) payloadMap.get("cmd")) {
                     case BodyType.DANMU_MSG:
-                        resolver = new DanmuBodyResolver(payloadMap);
+                        bodyResolver = new DanmuBodyResolver(payloadMap);
                         break;
                     case BodyType.INTERACT_WORD:
-                        resolver = new WelcomeBodyResolver(payloadMap);
+                        bodyResolver = new WelcomeBodyResolver(payloadMap);
                         break;
                     case BodyType.SEND_GIFT:
-                        resolver = new SendGiftResolver(payloadMap);
+                        bodyResolver = new SendGiftResolver(payloadMap);
                         break;
                     // 不需要处理的和未知类型
                     case BodyType.STOP_LIVE_ROOM_LIST:
                     default:
-//                        System.out.println(new String(payload));
-                        resolver = new UnknownBodyResolver(null);
+                        bodyResolver = new UnknownBodyResolver(null);
 
                 }
-                result = resolver.resolve();
+                result = bodyResolver.resolve();
                 break;
             }
             case Operation.OPERATION_8: {

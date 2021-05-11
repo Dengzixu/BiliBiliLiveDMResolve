@@ -2,6 +2,8 @@ package net.dengzixu.java.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.bcel.internal.Const;
+import net.dengzixu.java.constant.Constant;
 import net.dengzixu.java.packet.Operation;
 import net.dengzixu.java.packet.Packet;
 import net.dengzixu.java.packet.PacketBuilder;
@@ -13,16 +15,13 @@ import net.dengzixu.java.payload.body.DanmuBody;
 import net.dengzixu.java.payload.body.SendGiftBody;
 import net.dengzixu.java.payload.body.WelcomeBody;
 import net.dengzixu.java.payload.constant.BodyType;
-import net.dengzixu.java.protocol.BiliBiliLiveDMProtocol;
-import net.dengzixu.java.protocol.PacketResolve;
+import net.dengzixu.java.packet.PacketResolve;
 import net.dengzixu.java.third.api.GetAuthToken;
 import okhttp3.*;
 import okio.ByteString;
-import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,9 +38,6 @@ public class WebSocketManager {
     private boolean connect;
 
     private final long roomId;
-
-    private final String BILIBILI_LIVE_WS_URL = "wss://broadcastlv.chat.bilibili.com:443/sub";
-
 
     private WebSocketManager(long roomId) {
         this.roomId = roomId;
@@ -63,9 +59,8 @@ public class WebSocketManager {
                 .build();
 
         request = new Request.Builder()
-                .url(BILIBILI_LIVE_WS_URL)
+                .url(Constant.BILIBILI_LIVE_WS_URL)
                 .build();
-
     }
 
     public void connect() {
@@ -96,7 +91,6 @@ public class WebSocketManager {
                         Operation.OPERATION_2,
                         "[object Object]").buildArrays();
 
-//                System.out.println("心跳包 " + Arrays.toString(Hex.encodeHex(bytes)));
                 webSocket.send(new ByteString(bytes));
             }
         }, 0, 1000 * 30);
@@ -112,6 +106,7 @@ public class WebSocketManager {
         return new WebSocketListener() {
             @Override
             public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
+                stopHeartbeat();
                 super.onClosed(webSocket, code, reason);
             }
 
@@ -125,6 +120,7 @@ public class WebSocketManager {
             public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
                 connect = false;
                 System.out.println("Websocket onFailure");
+                stopHeartbeat();
                 super.onFailure(webSocket, t, response);
             }
 
@@ -136,16 +132,12 @@ public class WebSocketManager {
 
             @Override
             public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
-//                System.out.println("onMessage Bytes:" + bytes);
-
                 List<Packet> packets = new PacketResolve(bytes.toByteArray()).getPacketList();
-//
+
                 if (packets.size() > 0) {
                     for (Packet packet : packets) {
-
                         Body body = new PayloadResolver(packet.getPayload(),
-                                packet.getOperation())
-                                .resolve();
+                                packet.getOperation()).resolve();
 
                         switch (body.getType()) {
                             case BodyType.DANMU_MSG:
@@ -175,7 +167,7 @@ public class WebSocketManager {
 
             @Override
             public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-                System.out.println("Websocket Open");
+                System.out.println("建立链接");
 
                 // 构建认证 payload
                 AuthPayload authPayload = new AuthPayload();
@@ -186,9 +178,10 @@ public class WebSocketManager {
 
                 try {
                     payloadString = new ObjectMapper().writeValueAsString(authPayload);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                } catch (JsonProcessingException ignored) {
+
                 }
+
                 if (null != payloadString) {
                     byte[] packetArray = new PacketBuilder(ProtocolVersion.PROTOCOL_VERSION_1,
                             Operation.OPERATION_7,

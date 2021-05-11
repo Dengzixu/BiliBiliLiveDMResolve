@@ -6,7 +6,7 @@ import net.dengzixu.java.payload.body.Body;
 import net.dengzixu.java.payload.body.DanmuBody;
 import net.dengzixu.java.payload.body.WelcomeBody;
 import net.dengzixu.java.payload.constant.BodyType;
-import net.dengzixu.java.protocol.PacketResolve;
+import net.dengzixu.java.packet.PacketResolve;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.List;

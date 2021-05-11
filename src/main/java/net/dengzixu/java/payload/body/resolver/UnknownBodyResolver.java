@@ -6,7 +6,7 @@ import net.dengzixu.java.payload.constant.BodyType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UnknownBodyResolver extends Resolver {
+public class UnknownBodyResolver extends BodyResolver {
     public UnknownBodyResolver(Map<String, Object> payloadMap) {
         super(new HashMap<String, Object>() {{
             put("cmd", "unknown");
