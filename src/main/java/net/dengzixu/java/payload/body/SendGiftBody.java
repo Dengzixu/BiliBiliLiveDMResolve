@@ -59,6 +59,14 @@ public class SendGiftBody {
         this.price = price;
     }
 
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
     public FansMedal getFansMedal() {
         return fansMedal;
     }
@@ -76,7 +84,8 @@ public class SendGiftBody {
                 ", giftType=" + giftType +
                 ", num=" + num +
                 ", price=" + price +
-                ", fansMedalBody=" + fansMedalBody +
+                ", userInfo=" + userInfo +
+                ", fansMedal=" + fansMedal +
                 '}';
     }
 }
