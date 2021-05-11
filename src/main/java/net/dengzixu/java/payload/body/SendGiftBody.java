@@ -1,32 +1,14 @@
 package net.dengzixu.java.payload.body;
 
 public class SendGiftBody {
-    private String uname;
-    private long uid;
-
     private String coinType;
     private int giftId;
     private String giftName;
     private int giftType;
     private int num;
 
-    private FansMedalBody fansMedalBody;
-
-    public String getUname() {
-        return uname;
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
-
-    public long getUid() {
-        return uid;
-    }
-
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
+    private UserInfo userInfo;
+    private FansMedal fansMedal;
 
     public String getCoinType() {
         return coinType;
@@ -68,25 +50,32 @@ public class SendGiftBody {
         this.num = num;
     }
 
-    public FansMedalBody getFansMedalBody() {
-        return fansMedalBody;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setFansMedalBody(FansMedalBody fansMedalBody) {
-        this.fansMedalBody = fansMedalBody;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public FansMedal getFansMedal() {
+        return fansMedal;
+    }
+
+    public void setFansMedal(FansMedal fansMedal) {
+        this.fansMedal = fansMedal;
     }
 
     @Override
     public String toString() {
         return "SendGiftBody{" +
-                "uname='" + uname + '\'' +
-                ", uid=" + uid +
-                ", coinType='" + coinType + '\'' +
+                "coinType='" + coinType + '\'' +
                 ", giftId=" + giftId +
                 ", giftName='" + giftName + '\'' +
                 ", giftType=" + giftType +
                 ", num=" + num +
-                ", fansMedalBody=" + fansMedalBody +
+                ", userInfo=" + userInfo +
+                ", fansMedal=" + fansMedal +
                 '}';
     }
 }

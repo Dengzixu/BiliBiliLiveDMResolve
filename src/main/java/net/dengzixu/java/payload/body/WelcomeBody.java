@@ -1,41 +1,30 @@
 package net.dengzixu.java.payload.body;
 
 public class WelcomeBody {
-    private String username;
-    private long uid;
+    private UserInfo userInfo;
+    private FansMedal fansMedal;
 
-    private FansMedalBody fansMedalBody;
-
-    public String getUsername() {
-        return username;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public long getUid() {
-        return uid;
+    public FansMedal getFansMedal() {
+        return fansMedal;
     }
 
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
-
-    public FansMedalBody getFansMedalBody() {
-        return fansMedalBody;
-    }
-
-    public void setFansMedalBody(FansMedalBody fansMedalBody) {
-        this.fansMedalBody = fansMedalBody;
+    public void setFansMedal(FansMedal fansMedal) {
+        this.fansMedal = fansMedal;
     }
 
     @Override
     public String toString() {
         return "WelcomeBody{" +
-                "username='" + username + '\'' +
-                ", uid=" + uid +
-                ", fansMedalBody=" + fansMedalBody +
+                "userInfo=" + userInfo +
+                ", fansMedal=" + fansMedal +
                 '}';
     }
 }

@@ -2,10 +2,9 @@ package net.dengzixu.java.payload.body;
 
 public class DanmuBody {
     private String danmu;
-    private long uid;
-    private String username;
 
-    private FansMedalBody fansMedalBody;
+    private UserInfo UserInfo;
+    private FansMedal fansMedal;
 
     public String getDanmu() {
         return danmu;
@@ -15,37 +14,28 @@ public class DanmuBody {
         this.danmu = danmu;
     }
 
-    public long getUid() {
-        return uid;
+    public net.dengzixu.java.payload.body.UserInfo getUserInfo() {
+        return UserInfo;
     }
 
-    public void setUid(long uid) {
-        this.uid = uid;
+    public void setUserInfo(net.dengzixu.java.payload.body.UserInfo userInfo) {
+        UserInfo = userInfo;
     }
 
-    public String getUsername() {
-        return username;
+    public FansMedal getFansMedal() {
+        return fansMedal;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public FansMedalBody getFansMedalBody() {
-        return fansMedalBody;
-    }
-
-    public void setFansMedalBody(FansMedalBody fansMedalBody) {
-        this.fansMedalBody = fansMedalBody;
+    public void setFansMedal(FansMedal fansMedal) {
+        this.fansMedal = fansMedal;
     }
 
     @Override
     public String toString() {
         return "DanmuBody{" +
                 "danmu='" + danmu + '\'' +
-                ", uid=" + uid +
-                ", username='" + username + '\'' +
-                ", fansMedalBody=" + fansMedalBody +
+                ", UserInfo=" + UserInfo +
+                ", fansMedal=" + fansMedal +
                 '}';
     }
 }

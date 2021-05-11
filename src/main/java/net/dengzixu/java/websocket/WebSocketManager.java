@@ -2,7 +2,6 @@ package net.dengzixu.java.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.bcel.internal.Const;
 import net.dengzixu.java.constant.Constant;
 import net.dengzixu.java.packet.Operation;
 import net.dengzixu.java.packet.Packet;

@@ -59,6 +59,7 @@ public class PayloadResolver {
                         bodyResolver = new WelcomeBodyResolver(payloadMap);
                         break;
                     case BodyType.SEND_GIFT:
+                        System.out.println("FLAG0");
                         bodyResolver = new SendGiftResolver(payloadMap);
                         break;
                     // 不需要处理的和未知类型
