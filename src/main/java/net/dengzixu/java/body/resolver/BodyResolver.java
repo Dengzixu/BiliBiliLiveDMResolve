@@ -1,7 +1,7 @@
-package net.dengzixu.java.payload.body.resolver;
+package net.dengzixu.java.body.resolver;
 
 import net.dengzixu.java.exception.ErrorCmdException;
-import net.dengzixu.java.payload.body.Body;
+import net.dengzixu.java.body.Body;
 
 import java.util.Map;
 

@@ -3,8 +3,8 @@ package net.dengzixu.java.payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.packet.Operation;
-import net.dengzixu.java.payload.body.Body;
-import net.dengzixu.java.payload.body.resolver.*;
+import net.dengzixu.java.body.Body;
+import net.dengzixu.java.body.resolver.*;
 import net.dengzixu.java.payload.constant.BodyType;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package net.dengzixu.java.payload.body;
+package net.dengzixu.java.body;
 
 public class DanmuBody {
     private String danmu;
@@ -14,11 +14,11 @@ public class DanmuBody {
         this.danmu = danmu;
     }
 
-    public net.dengzixu.java.payload.body.UserInfo getUserInfo() {
+    public net.dengzixu.java.body.UserInfo getUserInfo() {
         return UserInfo;
     }
 
-    public void setUserInfo(net.dengzixu.java.payload.body.UserInfo userInfo) {
+    public void setUserInfo(net.dengzixu.java.body.UserInfo userInfo) {
         UserInfo = userInfo;
     }
 

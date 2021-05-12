@@ -1,4 +1,4 @@
-package net.dengzixu.java.payload.body;
+package net.dengzixu.java.body;
 
 public class WelcomeBody {
     private UserInfo userInfo;

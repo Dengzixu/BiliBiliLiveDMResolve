@@ -9,10 +9,10 @@ import net.dengzixu.java.packet.PacketBuilder;
 import net.dengzixu.java.packet.ProtocolVersion;
 import net.dengzixu.java.payload.AuthPayload;
 import net.dengzixu.java.payload.PayloadResolver;
-import net.dengzixu.java.payload.body.Body;
-import net.dengzixu.java.payload.body.DanmuBody;
-import net.dengzixu.java.payload.body.SendGiftBody;
-import net.dengzixu.java.payload.body.WelcomeBody;
+import net.dengzixu.java.body.Body;
+import net.dengzixu.java.body.DanmuBody;
+import net.dengzixu.java.body.SendGiftBody;
+import net.dengzixu.java.body.WelcomeBody;
 import net.dengzixu.java.payload.constant.BodyType;
 import net.dengzixu.java.packet.PacketResolve;
 import net.dengzixu.java.third.api.GetAuthToken;
@@ -89,7 +89,6 @@ public class WebSocketManager {
                 byte[] bytes = new PacketBuilder(ProtocolVersion.PROTOCOL_VERSION_1,
                         Operation.OPERATION_2,
                         "[object Object]").buildArrays();
-
                 webSocket.send(new ByteString(bytes));
             }
         }, 0, 1000 * 30);

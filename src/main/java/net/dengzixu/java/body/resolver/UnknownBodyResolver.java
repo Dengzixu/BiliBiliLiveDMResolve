@@ -1,6 +1,6 @@
-package net.dengzixu.java.payload.body.resolver;
+package net.dengzixu.java.body.resolver;
 
-import net.dengzixu.java.payload.body.Body;
+import net.dengzixu.java.body.Body;
 import net.dengzixu.java.payload.constant.BodyType;
 
 import java.util.HashMap;
