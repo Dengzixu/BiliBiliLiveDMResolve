@@ -37,8 +37,6 @@ public class WelcomeBodyResolver extends BodyResolver {
         final Map<String, Object> fansMedalMap = (Map<String, Object>) dataMap.get("fans_medal");
 
         if ((int) fansMedalMap.get("target_id") != 0) {
-            FansMedal fansMedal = new FansMedal();
-
             welcomeBody.setFansMedal(new FansMedal() {{
                 setMedalLevel((int) fansMedalMap.get("medal_level"));
                 setMedalName((String) fansMedalMap.get("medal_name"));

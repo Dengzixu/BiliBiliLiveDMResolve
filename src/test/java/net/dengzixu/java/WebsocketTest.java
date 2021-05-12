@@ -4,9 +4,10 @@ import net.dengzixu.java.third.api.GetAuthToken;
 import net.dengzixu.java.websocket.WebSocketManager;
 
 public class WebsocketTest {
+    private static final long ROOM_ID = 3080147;
+
     public static void main(String[] args) {
-//        System.out.println(GetAuthToken.get(77274));
-        WebSocketManager webSocketManager = WebSocketManager.getInstance(14047);
+        WebSocketManager webSocketManager = WebSocketManager.getInstance(ROOM_ID);
         webSocketManager.init();
         webSocketManager.connect();
     }
