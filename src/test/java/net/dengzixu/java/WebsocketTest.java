@@ -1,6 +1,5 @@
 package net.dengzixu.java;
 
-import net.dengzixu.java.third.api.GetAuthToken;
 import net.dengzixu.java.websocket.WebSocketManager;
 
 public class WebsocketTest {

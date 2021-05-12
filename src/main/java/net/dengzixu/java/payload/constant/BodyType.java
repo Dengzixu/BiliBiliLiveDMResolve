@@ -29,6 +29,4 @@ public class BodyType {
     public static final String UNKNOWN = "UNKNOWN";
     public static final String AUTH_SUCCESS = "AUTH_SUCCESS";
     public static final String POPULARITY = "POPULARITY";
-
-
 }

@@ -1,4 +1,4 @@
-package net.dengzixu.java.body;
+package net.dengzixu.java.message;
 
 public class FansMedal {
     private int medalLevel;

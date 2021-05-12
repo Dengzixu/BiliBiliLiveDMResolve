@@ -1,12 +1,9 @@
 package net.dengzixu.java;
 
-import net.dengzixu.java.payload.*;
+import net.dengzixu.java.message.Message;
 import net.dengzixu.java.packet.Packet;
-import net.dengzixu.java.body.Body;
-import net.dengzixu.java.body.DanmuBody;
-import net.dengzixu.java.body.WelcomeBody;
-import net.dengzixu.java.payload.constant.BodyType;
 import net.dengzixu.java.packet.PacketResolve;
+import net.dengzixu.java.payload.PayloadResolver;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.List;
@@ -32,22 +29,18 @@ public class ResolveTest {
         List<Packet> packetList = resolver.getPacketList();
 
         for (Packet packet : packetList) {
-            System.out.println(packet);
-            Body body = new PayloadResolver(packet.getPayload(), packet.getOperation()).resolve();
+//            System.out.println(packet);
+            Message message = new PayloadResolver(packet.getPayload(), packet.getOperation()).resolve();
 
-            switch (body.getType()) {
-                case BodyType.DANMU_MSG:
-                    DanmuBody danmuBody = (DanmuBody) body.getBody();
-
-                    System.out.println(danmuBody);
-
+            switch (message.getBodyCommand()) {
+                case DANMU_MSG:
+                case INTERACT_WORD:
+                case SEND_GIFT:
+                    System.out.println(message);
                     break;
-                case BodyType.INTERACT_WORD:
-                    WelcomeBody welcomeBody = (WelcomeBody) body.getBody();
-
-                    System.out.println(welcomeBody);
-
+                case UNKNOWN:
                     break;
+                default:
             }
         }
     }

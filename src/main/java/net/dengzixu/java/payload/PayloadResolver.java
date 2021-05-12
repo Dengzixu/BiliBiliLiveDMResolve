@@ -2,15 +2,17 @@ package net.dengzixu.java.payload;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.dengzixu.java.packet.Operation;
-import net.dengzixu.java.body.Body;
 import net.dengzixu.java.body.resolver.*;
+import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.message.Message;
+import net.dengzixu.java.packet.Operation;
 import net.dengzixu.java.payload.constant.BodyType;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PayloadResolver {
@@ -26,15 +28,16 @@ public class PayloadResolver {
         this.operation = operation;
     }
 
-    public Body resolve() {
-        Body result = new Body();
+    public Message resolve() {
+        Message message = new Message();
 
         switch (operation) {
             case Operation.OPERATION_3: {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(payload.length).put(payload);
-                result.setBody(byteBuffer.order(ByteOrder.BIG_ENDIAN).getInt(0));
-                result.setBodyClass(int.class);
-                result.setType(BodyType.POPULARITY);
+                message.setBodyCommand(BodyCommand.POPULARITY);
+                message.setContent(new HashMap<>() {{
+                    put("popularity", byteBuffer.order(ByteOrder.BIG_ENDIAN).getInt(0));
+                }});
 
                 break;
             }
@@ -65,9 +68,15 @@ public class PayloadResolver {
                     case BodyType.STOP_LIVE_ROOM_LIST:
                     default:
                         bodyResolver = new UnknownBodyResolver(null);
-
                 }
-                result = bodyResolver.resolve();
+                try {
+                    message = bodyResolver.resolve();
+                } catch (Exception e) {
+                    message = new Message(){{
+                        setBodyCommand(BodyCommand.UNKNOWN);
+                    }};
+                    e.printStackTrace();
+                }
                 break;
             }
             case Operation.OPERATION_8: {
@@ -82,10 +91,8 @@ public class PayloadResolver {
                 // 特殊处理
                 try {
                     if ((int) payloadMap.get("code") == 0) {
-                        result = new Body() {{
-                            setType(BodyType.AUTH_SUCCESS);
-                            setBody(true);
-                            setBodyClass(boolean.class);
+                        message = new Message() {{
+                            setBodyCommand(BodyCommand.AUTH_SUCCESS);
                         }};
                     }
                 } catch (Exception ignored) {
@@ -93,12 +100,11 @@ public class PayloadResolver {
                 break;
             }
             default:
-                result = new Body() {{
-                    setType(BodyType.UNKNOWN);
-                    setBodyClass(null);
-                    setBody(null);
+                message = new Message() {{
+                    setBodyCommand(BodyCommand.UNKNOWN);
                 }};
+
         }
-        return result;
+        return message;
     }
 }

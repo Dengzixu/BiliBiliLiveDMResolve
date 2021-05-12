@@ -1,52 +1,50 @@
 package net.dengzixu.java.body.resolver;
 
+import net.dengzixu.java.message.FansMedal;
+import net.dengzixu.java.message.UserInfo;
+import net.dengzixu.java.constant.BodyCommand;
 import net.dengzixu.java.exception.ErrorCmdException;
-import net.dengzixu.java.body.Body;
-import net.dengzixu.java.body.DanmuBody;
-import net.dengzixu.java.body.FansMedal;
-import net.dengzixu.java.body.UserInfo;
-import net.dengzixu.java.payload.constant.BodyType;
+import net.dengzixu.java.message.Message;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DanmuBodyResolver extends BodyResolver {
-    private static final String CMD = BodyType.DANMU_MSG;
+    private static final BodyCommand BODY_COMMAND = BodyCommand.DANMU_MSG;
 
     public DanmuBodyResolver(Map<String, Object> payloadMap) {
         super(payloadMap);
 
-        if (!CMD.equals(this.payloadCmd)) {
+        if (!BODY_COMMAND.toString().equals(this.payloadCmd)) {
             throw new ErrorCmdException();
         }
     }
 
 
     @Override
-    public Body resolve() {
-        Body body = new Body();
+    public Message resolve() {
+        Message message = new Message();
+        message.setBodyCommand(BODY_COMMAND);
 
-        DanmuBody danmuBody = new DanmuBody();
-
-        // ["info"]
+        // ["info"] 弹幕内容
         final ArrayList<Object> infoList = (ArrayList) this.payloadMap.get("info");
 
-        // 弹幕内容
-        danmuBody.setDanmu((String) infoList.get(1));
+        message.setContent(new HashMap<>() {{
+            put("danmu", infoList.get(1));
+        }});
 
-        // 发送用户
+        // 用户信息
         final ArrayList<Object> userInfoList = (ArrayList) infoList.get(2);
-        danmuBody.setUserInfo(new UserInfo() {{
+        message.setUserInfo(new UserInfo() {{
             setUid((int) userInfoList.get(0));
             setUsername((String) userInfoList.get(1));
         }});
 
-
-        // 发送用户粉丝牌信息
+        // 粉丝牌信息
         final ArrayList<Object> fansMedalList = (ArrayList) infoList.get(3);
-
         if (!fansMedalList.isEmpty()) {
-            danmuBody.setFansMedal(new FansMedal() {{
+            message.setFansMedal(new FansMedal() {{
                 setMedalLevel((int) fansMedalList.get(0));
                 setMedalName((String) fansMedalList.get(1));
                 setMedalColor((int) fansMedalList.get(4));
@@ -54,14 +52,9 @@ public class DanmuBodyResolver extends BodyResolver {
                 setMedalColorStart((int) fansMedalList.get(8));
                 setMedalColorEnd((int) fansMedalList.get(9));
                 setLighted((int) fansMedalList.get(11) == 1);
-
             }});
         }
 
-        body.setType(BodyType.DANMU_MSG);
-        body.setBodyClass(danmuBody.getClass());
-        body.setBody(danmuBody);
-
-        return body;
+        return message;
     }
 }

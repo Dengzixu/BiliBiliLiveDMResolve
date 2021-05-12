@@ -1,7 +1,7 @@
 package net.dengzixu.java.body.resolver;
 
 import net.dengzixu.java.exception.ErrorCmdException;
-import net.dengzixu.java.body.Body;
+import net.dengzixu.java.message.Message;
 
 import java.util.Map;
 
@@ -27,5 +27,5 @@ public abstract class BodyResolver {
         }
     }
 
-    public abstract Body resolve();
+    public abstract Message resolve();
 }

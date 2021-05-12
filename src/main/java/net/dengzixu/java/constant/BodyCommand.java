@@ -1,12 +1,13 @@
 package net.dengzixu.java.constant;
 
 public enum BodyCommand {
-    AUTH_SUCCESS("AUTH_SUCCESS"),
     DANMU_MSG("DANMU_MSG"),
     INTERACT_WORD("INTERACT_WORD"),
-    POPULARITY("POPULARITY"),
     SEND_GIFT("SEND_GIFT"),
     STOP_LIVE_ROOM_LIST("STOP_LIVE_ROOM_LIST"),
+
+    AUTH_SUCCESS("AUTH_SUCCESS"),
+    POPULARITY("POPULARITY"),
 
     UNKNOWN("UNKNOWN");
 

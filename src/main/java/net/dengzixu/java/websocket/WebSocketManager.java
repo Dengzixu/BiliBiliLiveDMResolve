@@ -3,18 +3,10 @@ package net.dengzixu.java.websocket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.constant.Constant;
-import net.dengzixu.java.packet.Operation;
-import net.dengzixu.java.packet.Packet;
-import net.dengzixu.java.packet.PacketBuilder;
-import net.dengzixu.java.packet.ProtocolVersion;
+import net.dengzixu.java.message.Message;
+import net.dengzixu.java.packet.*;
 import net.dengzixu.java.payload.AuthPayload;
 import net.dengzixu.java.payload.PayloadResolver;
-import net.dengzixu.java.body.Body;
-import net.dengzixu.java.body.DanmuBody;
-import net.dengzixu.java.body.SendGiftBody;
-import net.dengzixu.java.body.WelcomeBody;
-import net.dengzixu.java.payload.constant.BodyType;
-import net.dengzixu.java.packet.PacketResolve;
 import net.dengzixu.java.third.api.GetAuthToken;
 import okhttp3.*;
 import okio.ByteString;
@@ -134,28 +126,18 @@ public class WebSocketManager {
 
                 if (packets.size() > 0) {
                     for (Packet packet : packets) {
-                        Body body = new PayloadResolver(packet.getPayload(),
+                        Message message = new PayloadResolver(packet.getPayload(),
                                 packet.getOperation()).resolve();
 
-                        switch (body.getType()) {
-                            case BodyType.DANMU_MSG:
-                                DanmuBody danmuBody = (DanmuBody) body.getBody();
-
-                                System.out.println(danmuBody);
-
+                        switch (message.getBodyCommand()) {
+                            case DANMU_MSG:
+                            case INTERACT_WORD:
+                            case SEND_GIFT:
+                                System.out.println(message);
                                 break;
-                            case BodyType.INTERACT_WORD:
-                                WelcomeBody welcomeBody = (WelcomeBody) body.getBody();
-
-                                System.out.println(welcomeBody);
-
+                            case UNKNOWN:
                                 break;
-                            case BodyType.SEND_GIFT:
-                                SendGiftBody sendGiftBody = (SendGiftBody) body.getBody();
-
-                                System.out.println(sendGiftBody);
-
-                                break;
+                            default:
                         }
                     }
                 }

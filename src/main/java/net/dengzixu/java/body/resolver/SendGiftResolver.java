@@ -1,69 +1,62 @@
 package net.dengzixu.java.body.resolver;
 
+import net.dengzixu.java.message.FansMedal;
+import net.dengzixu.java.message.UserInfo;
+import net.dengzixu.java.constant.BodyCommand;
 import net.dengzixu.java.exception.ErrorCmdException;
-import net.dengzixu.java.body.Body;
-import net.dengzixu.java.body.FansMedal;
-import net.dengzixu.java.body.SendGiftBody;
-import net.dengzixu.java.body.UserInfo;
-import net.dengzixu.java.payload.constant.BodyType;
+import net.dengzixu.java.message.Message;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SendGiftResolver extends BodyResolver {
-    private static final String CMD = BodyType.SEND_GIFT;
+    private static final BodyCommand BODY_COMMAND = BodyCommand.SEND_GIFT;
 
     public SendGiftResolver(Map<String, Object> payloadMap) {
         super(payloadMap);
 
-        if (!CMD.equals(this.payloadCmd)) {
+        if (!BODY_COMMAND.toString().equals(this.payloadCmd)) {
             throw new ErrorCmdException();
         }
     }
 
     @Override
-    public Body resolve() {
-        Body body = new Body();
+    public Message resolve() {
+        Message message = new Message();
+        message.setBodyCommand(BODY_COMMAND);
 
-        SendGiftBody sendGiftBody = new SendGiftBody();
 
         final Map<String, Object> dataMap = (Map<String, Object>) payloadMap.get("data");
 
-        try {
-            sendGiftBody.setUserInfo(new UserInfo() {{
-                setUsername((String) dataMap.get("uname"));
-                setUid((int) dataMap.get("uid"));
-                setFace((String) dataMap.get("face"));
-            }});
+        // 礼物信息
+        message.setContent(new HashMap<>() {{
+            put("coin_type", dataMap.get("coin_type"));
+            put("gift_id", dataMap.get("giftId"));
+            put("gift_name", dataMap.get("giftName"));
+            put("gift_type", dataMap.get("giftType"));
+            put("num", dataMap.get("num"));
+            put("price", dataMap.get("price"));
+        }});
 
-            sendGiftBody.setCoinType((String) dataMap.get("coin_type"));
-            sendGiftBody.setGiftId((int) dataMap.get("giftId"));
-            sendGiftBody.setGiftName((String) dataMap.get("giftName"));
-            sendGiftBody.setGiftType((int) dataMap.get("giftType"));
-            sendGiftBody.setNum((int) dataMap.get("num"));
-            sendGiftBody.setPrice((int) dataMap.get("price"));
+        // 用户信息
+        message.setUserInfo(new UserInfo() {{
+            setUsername((String) dataMap.get("uname"));
+            setUid((int) dataMap.get("uid"));
+            setFace((String) dataMap.get("face"));
+        }});
 
-            // 粉丝牌信息
-            final Map<String, Object> fansMedalMap = (Map<String, Object>) dataMap.get("medal_info");
+        // 粉丝牌信息
+        final Map<String, Object> fansMedalMap = (Map<String, Object>) dataMap.get("medal_info");
+        message.setFansMedal(new FansMedal() {{
+            setMedalLevel((int) fansMedalMap.get("medal_level"));
+            setMedalName((String) fansMedalMap.get("medal_name"));
+            setMedalColor((int) fansMedalMap.get("medal_color"));
+            setMedalColorBorder((int) fansMedalMap.get("medal_color_border"));
+            setMedalColorStart((int) fansMedalMap.get("medal_color_start"));
+            setMedalColorEnd((int) fansMedalMap.get("medal_color_end"));
+            setLighted((int) fansMedalMap.get("is_lighted") == 1);
+        }});
 
-            if ((int) fansMedalMap.get("target_id") != 0) {
-                sendGiftBody.setFansMedal(new FansMedal() {{
-                    setMedalLevel((int) fansMedalMap.get("medal_level"));
-                    setMedalName((String) fansMedalMap.get("medal_name"));
-                    setMedalColor((int) fansMedalMap.get("medal_color"));
-                    setMedalColorBorder((int) fansMedalMap.get("medal_color_border"));
-                    setMedalColorStart((int) fansMedalMap.get("medal_color_start"));
-                    setMedalColorEnd((int) fansMedalMap.get("medal_color_end"));
-                    setLighted((int) fansMedalMap.get("is_lighted") == 1);
-                }});
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        body.setType(BodyType.SEND_GIFT);
-        body.setBodyClass(sendGiftBody.getClass());
-        body.setBody(sendGiftBody);
-
-        return body;
+        return message;
     }
 }
