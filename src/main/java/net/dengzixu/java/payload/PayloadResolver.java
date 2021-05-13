@@ -6,7 +6,6 @@ import net.dengzixu.java.body.resolver.*;
 import net.dengzixu.java.constant.BodyCommand;
 import net.dengzixu.java.constant.PacketOperation;
 import net.dengzixu.java.message.Message;
-import net.dengzixu.java.payload.constant.BodyType;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -54,25 +53,25 @@ public class PayloadResolver {
                 // 根据 cmd 解析
                 BodyResolver bodyResolver;
 
-                switch ((String) payloadMap.get("cmd")) {
-                    case BodyType.DANMU_MSG:
+                switch (BodyCommand.valueOf((String) payloadMap.get("cmd"), false)) {
+                    case DANMU_MSG:
                         bodyResolver = new DanmuBodyResolver(payloadMap);
                         break;
-                    case BodyType.INTERACT_WORD:
+                    case INTERACT_WORD:
                         bodyResolver = new WelcomeBodyResolver(payloadMap);
                         break;
-                    case BodyType.SEND_GIFT:
+                    case SEND_GIFT:
                         bodyResolver = new SendGiftResolver(payloadMap);
                         break;
                     // 不需要处理的和未知类型
-                    case BodyType.STOP_LIVE_ROOM_LIST:
+                    case STOP_LIVE_ROOM_LIST:
                     default:
                         bodyResolver = new UnknownBodyResolver(null);
                 }
                 try {
                     message = bodyResolver.resolve();
                 } catch (Exception e) {
-                    message = new Message(){{
+                    message = new Message() {{
                         setBodyCommand(BodyCommand.UNKNOWN);
                     }};
                     e.printStackTrace();
