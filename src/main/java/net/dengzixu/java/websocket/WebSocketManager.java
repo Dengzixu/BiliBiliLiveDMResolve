@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.constant.Constant;
 import net.dengzixu.java.constant.PacketOperation;
+import net.dengzixu.java.constant.PacketProtocolVersion;
 import net.dengzixu.java.message.Message;
 import net.dengzixu.java.packet.*;
 import net.dengzixu.java.payload.AuthPayload;
@@ -35,6 +36,12 @@ public class WebSocketManager {
         this.roomId = roomId;
     }
 
+    /**
+     * getInstance
+     *
+     * @param roomId 房间ID
+     * @return WebSocketManager
+     */
     public static WebSocketManager getInstance(long roomId) {
         if (null == webSocketManager) {
             synchronized (WebSocketManager.class) {
@@ -46,6 +53,9 @@ public class WebSocketManager {
         return webSocketManager;
     }
 
+    /**
+     * 初始化
+     */
     public void init() {
         okHttpClient = new OkHttpClient.Builder()
                 .build();
@@ -55,6 +65,9 @@ public class WebSocketManager {
                 .build();
     }
 
+    /**
+     * 建立链接
+     */
     public void connect() {
         webSocket = okHttpClient.newWebSocket(request, createWebSocketListener());
     }
@@ -71,6 +84,9 @@ public class WebSocketManager {
         webSocket.close(1001, "");
     }
 
+    /**
+     * 开始发送心跳
+     */
     private void startHeartbeat() {
         if (null == heartbeatTimer) {
             heartbeatTimer = new Timer();
@@ -79,7 +95,7 @@ public class WebSocketManager {
         heartbeatTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                byte[] bytes = new PacketBuilder(ProtocolVersion.PROTOCOL_VERSION_1,
+                byte[] bytes = new PacketBuilder(PacketProtocolVersion.PROTOCOL_VERSION_1.version(),
                         PacketOperation.OPERATION_2.operation(),
                         "[object Object]").buildArrays();
                 webSocket.send(new ByteString(bytes));
@@ -87,6 +103,9 @@ public class WebSocketManager {
         }, 0, 1000 * 30);
     }
 
+    /**
+     * 停止发送心跳
+     */
     private void stopHeartbeat() {
         if (null != heartbeatTimer) {
             heartbeatTimer.cancel();
@@ -112,6 +131,7 @@ public class WebSocketManager {
                 connect = false;
                 System.out.println("Websocket onFailure");
                 stopHeartbeat();
+                close();
                 super.onFailure(webSocket, t, response);
             }
 
@@ -127,8 +147,8 @@ public class WebSocketManager {
 
                 if (packets.size() > 0) {
                     for (Packet packet : packets) {
-                        Message message = new PayloadResolver(packet.getPayload(), packet.getOperation())
-                                .resolve();
+                        Message message = new PayloadResolver(packet.getPayload(),
+                                PacketOperation.valueOf(packet.getOperation())).resolve();
 
                         switch (message.getBodyCommand()) {
                             case DANMU_MSG:
@@ -164,7 +184,7 @@ public class WebSocketManager {
                 }
 
                 if (null != payloadString) {
-                    byte[] packetArray = new PacketBuilder(ProtocolVersion.PROTOCOL_VERSION_1,
+                    byte[] packetArray = new PacketBuilder(PacketProtocolVersion.PROTOCOL_VERSION_1.version(),
                             PacketOperation.OPERATION_7.operation(),
                             payloadString).buildArrays();
 

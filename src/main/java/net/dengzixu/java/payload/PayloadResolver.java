@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.body.resolver.*;
 import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.constant.PacketOperation;
 import net.dengzixu.java.message.Message;
-import net.dengzixu.java.packet.Operation;
 import net.dengzixu.java.payload.constant.BodyType;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,22 +17,22 @@ import java.util.Map;
 
 public class PayloadResolver {
     private final byte[] payload;
-    private final int operation;
+    private final PacketOperation operation;
 
-    public PayloadResolver(@NotNull String payload, int operation) {
-        this(payload.getBytes(StandardCharsets.UTF_8), operation);
+    public PayloadResolver(@NotNull String payload, PacketOperation packetOperation) {
+        this(payload.getBytes(StandardCharsets.UTF_8), packetOperation);
     }
 
-    public PayloadResolver(byte[] payload, int operation) {
+    public PayloadResolver(byte[] payload, PacketOperation packetOperation) {
         this.payload = payload;
-        this.operation = operation;
+        this.operation = packetOperation;
     }
 
     public Message resolve() {
         Message message = new Message();
 
         switch (operation) {
-            case Operation.OPERATION_3: {
+            case OPERATION_3: {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(payload.length).put(payload);
                 message.setBodyCommand(BodyCommand.POPULARITY);
                 message.setContent(new HashMap<>() {{
@@ -41,7 +41,7 @@ public class PayloadResolver {
 
                 break;
             }
-            case Operation.OPERATION_5: {
+            case OPERATION_5: {
                 Map<String, Object> payloadMap;
                 try {
                     // 反序列化
@@ -79,7 +79,7 @@ public class PayloadResolver {
                 }
                 break;
             }
-            case Operation.OPERATION_8: {
+            case OPERATION_8: {
                 Map<String, Object> payloadMap;
                 try {
                     // 反序列化

@@ -1,5 +1,7 @@
 package net.dengzixu.java.packet;
 
+import net.dengzixu.java.constant.PacketProtocolVersion;
+import net.dengzixu.java.exception.UnknownProtocolVersionException;
 import net.dengzixu.java.utils.ZlibUtil;
 
 import java.nio.ByteBuffer;
@@ -7,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PacketResolve {
+    private static final short PROTOCOL_VERSION_0 = 0;
+    private static final short PROTOCOL_VERSION_1 = 1;
+    private static final short PROTOCOL_VERSION_2 = 2;
+
     private final byte[] rawData;
     private final int rawDataLength;
 
@@ -40,7 +46,6 @@ public class PacketResolve {
                 byte[] bodyBytes = new byte[getPacketLength() - 16];
 
                 for (int i = 0; i < bodyBytes.length; i++) {
-//                    System.out.println("[" + i + "]");
                     bodyBytes[i] = byteBuffer.get(currentOffset + 16 + i);
                 }
 
@@ -50,7 +55,7 @@ public class PacketResolve {
             currentOffset += resolvedPacket.getPacketLength();
         }
 
-        // TODO 猜测 如果大于 1 个数据包 数据包就不可能是压缩的
+        // TODO 猜测 如果大于 1 个数据包 数据包就不再可能是压缩的
         if (resultPacketList.size() > 1) {
             return resultPacketList;
         }
@@ -58,17 +63,17 @@ public class PacketResolve {
         // 根据 Protocol Version 进行处理
         switch (resultPacketList.get(0).getProtocolVersion()) {
             // 如果协议版本为 0 或 1 直接返回
-            case ProtocolVersion.PROTOCOL_VERSION_0:
-            case ProtocolVersion.PROTOCOL_VERSION_1:
+            case PROTOCOL_VERSION_0:
+            case PROTOCOL_VERSION_1:
                 break;
             // 如果协议版本为 2 就解压一下
-            case ProtocolVersion.PROTOCOL_VERSION_2:
+            case PROTOCOL_VERSION_2:
                 byte[] compressedData = ZlibUtil.inflate(resultPacketList.get(0).getPayload());
                 // 递归一把梭
                 resultPacketList = new PacketResolve(compressedData).getPacketList();
                 break;
             default:
-                resultPacketList = null;
+                throw new UnknownProtocolVersionException();
         }
         return resultPacketList;
     }
