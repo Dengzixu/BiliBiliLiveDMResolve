@@ -3,6 +3,7 @@ package net.dengzixu.java.websocket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.constant.Constant;
+import net.dengzixu.java.constant.PacketOperation;
 import net.dengzixu.java.message.Message;
 import net.dengzixu.java.packet.*;
 import net.dengzixu.java.payload.AuthPayload;
@@ -79,7 +80,7 @@ public class WebSocketManager {
             @Override
             public void run() {
                 byte[] bytes = new PacketBuilder(ProtocolVersion.PROTOCOL_VERSION_1,
-                        Operation.OPERATION_2,
+                        PacketOperation.OPERATION_2.operation(),
                         "[object Object]").buildArrays();
                 webSocket.send(new ByteString(bytes));
             }
@@ -126,8 +127,8 @@ public class WebSocketManager {
 
                 if (packets.size() > 0) {
                     for (Packet packet : packets) {
-                        Message message = new PayloadResolver(packet.getPayload(),
-                                packet.getOperation()).resolve();
+                        Message message = new PayloadResolver(packet.getPayload(), packet.getOperation())
+                                .resolve();
 
                         switch (message.getBodyCommand()) {
                             case DANMU_MSG:
@@ -164,7 +165,7 @@ public class WebSocketManager {
 
                 if (null != payloadString) {
                     byte[] packetArray = new PacketBuilder(ProtocolVersion.PROTOCOL_VERSION_1,
-                            Operation.OPERATION_7,
+                            PacketOperation.OPERATION_7.operation(),
                             payloadString).buildArrays();
 
                     webSocket.send(new ByteString(packetArray));

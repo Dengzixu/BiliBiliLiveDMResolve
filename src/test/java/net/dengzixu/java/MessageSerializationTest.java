@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.util.HashMap;
 
 public class MessageSerializationTest {
-
     private Message message;
 
     @Before
