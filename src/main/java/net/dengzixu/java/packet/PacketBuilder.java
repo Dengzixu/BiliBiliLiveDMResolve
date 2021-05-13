@@ -1,5 +1,8 @@
 package net.dengzixu.java.packet;
 
+import net.dengzixu.java.constant.PacketOperationEnum;
+import net.dengzixu.java.constant.PacketProtocolVersionEnum;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +23,13 @@ public class PacketBuilder {
                 1, payload);
     }
 
+    public PacketBuilder(PacketProtocolVersionEnum packetProtocolVersion, PacketOperationEnum packetOperation,
+                         String payloadString) {
+        this(16 + payloadString.getBytes(StandardCharsets.UTF_8).length, (short) 16,
+                packetProtocolVersion.version(), packetOperation.operation(),
+                1, payloadString.getBytes(StandardCharsets.UTF_8));
+    }
+
     public PacketBuilder(short protocolVersion, int operation,
                          String payloadString) {
         this(16 + payloadString.getBytes(StandardCharsets.UTF_8).length, (short) 16,
@@ -27,10 +37,9 @@ public class PacketBuilder {
                 1, payloadString.getBytes(StandardCharsets.UTF_8));
     }
 
-
-    public PacketBuilder(final int packetLength, final short headerLength,
-                         final short protocolVersion, final int operation,
-                         final int sequenceId, final byte[] payload) {
+    public PacketBuilder(int packetLength, short headerLength,
+                         short protocolVersion, int operation,
+                         int sequenceId, byte[] payload) {
 
         this.packet = new Packet() {{
             setPacketLength(packetLength);

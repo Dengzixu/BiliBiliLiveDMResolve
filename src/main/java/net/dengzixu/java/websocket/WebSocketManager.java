@@ -95,8 +95,8 @@ public class WebSocketManager {
         heartbeatTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                byte[] bytes = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1.version(),
-                        PacketOperationEnum.OPERATION_2.operation(),
+                byte[] bytes = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1,
+                        PacketOperationEnum.OPERATION_2,
                         "[object Object]").buildArrays();
                 webSocket.send(new ByteString(bytes));
             }
@@ -156,6 +156,11 @@ public class WebSocketManager {
                             case SEND_GIFT:
                                 System.out.println(message);
                                 break;
+                            case AUTH_SUCCESS:
+                                System.out.println("认证成功");
+                                connect = true;
+                                startHeartbeat();
+                                break;
                             case UNKNOWN:
                                 break;
                             default:
@@ -184,16 +189,13 @@ public class WebSocketManager {
                 }
 
                 if (null != payloadString) {
-                    byte[] packetArray = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1.version(),
-                            PacketOperationEnum.OPERATION_7.operation(),
+                    byte[] packetArray = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1,
+                            PacketOperationEnum.OPERATION_7,
                             payloadString).buildArrays();
 
                     webSocket.send(new ByteString(packetArray));
                 }
 
-                connect = true;
-
-                startHeartbeat();
                 super.onOpen(webSocket, response);
             }
         };
