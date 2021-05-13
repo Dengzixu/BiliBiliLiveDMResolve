@@ -3,7 +3,7 @@ package net.dengzixu.java.constant;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum PacketOperation {
+public enum PacketOperationEnum {
     /**
      * 操作类型
      * 2: 客户端   (空)                 心跳      不发送心跳包，70 秒之后会断开连接，通常每 30 秒发送 1 次
@@ -22,19 +22,19 @@ public enum PacketOperation {
 
     private final Integer packetOperation;
 
-    private static final Map<Integer, PacketOperation> enumMap = new HashMap<>();
+    private static final Map<Integer, PacketOperationEnum> enumMap = new HashMap<>();
 
     static {
-        for (PacketOperation e : values()) {
+        for (PacketOperationEnum e : values()) {
             enumMap.put(e.operation(), e);
         }
     }
 
-    PacketOperation(Integer operation) {
+    PacketOperationEnum(Integer operation) {
         this.packetOperation = operation;
     }
 
-    public static PacketOperation valueOf(int operation) {
+    public static PacketOperationEnum getEnum(int operation) {
         return null == enumMap.get(operation) ? OPERATION_UNKNOWN : enumMap.get(operation);
     }
 

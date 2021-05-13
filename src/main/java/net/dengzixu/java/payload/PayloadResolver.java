@@ -3,8 +3,8 @@ package net.dengzixu.java.payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.body.resolver.*;
-import net.dengzixu.java.constant.BodyCommand;
-import net.dengzixu.java.constant.PacketOperation;
+import net.dengzixu.java.constant.BodyCommandEnum;
+import net.dengzixu.java.constant.PacketOperationEnum;
 import net.dengzixu.java.message.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,15 +16,15 @@ import java.util.Map;
 
 public class PayloadResolver {
     private final byte[] payload;
-    private final PacketOperation operation;
+    private final PacketOperationEnum operation;
 
-    public PayloadResolver(@NotNull String payload, PacketOperation packetOperation) {
-        this(payload.getBytes(StandardCharsets.UTF_8), packetOperation);
+    public PayloadResolver(@NotNull String payload, PacketOperationEnum packetOperationEnum) {
+        this(payload.getBytes(StandardCharsets.UTF_8), packetOperationEnum);
     }
 
-    public PayloadResolver(byte[] payload, PacketOperation packetOperation) {
+    public PayloadResolver(byte[] payload, PacketOperationEnum packetOperationEnum) {
         this.payload = payload;
-        this.operation = packetOperation;
+        this.operation = packetOperationEnum;
     }
 
     public Message resolve() {
@@ -33,7 +33,7 @@ public class PayloadResolver {
         switch (operation) {
             case OPERATION_3: {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(payload.length).put(payload);
-                message.setBodyCommand(BodyCommand.POPULARITY);
+                message.setBodyCommand(BodyCommandEnum.POPULARITY);
                 message.setContent(new HashMap<>() {{
                     put("popularity", byteBuffer.order(ByteOrder.BIG_ENDIAN).getInt(0));
                 }});
@@ -53,7 +53,7 @@ public class PayloadResolver {
                 // 根据 cmd 解析
                 BodyResolver bodyResolver;
 
-                switch (BodyCommand.valueOf((String) payloadMap.get("cmd"), false)) {
+                switch (BodyCommandEnum.getEnum((String) payloadMap.get("cmd"))) {
                     case DANMU_MSG:
                         bodyResolver = new DanmuBodyResolver(payloadMap);
                         break;
@@ -72,7 +72,7 @@ public class PayloadResolver {
                     message = bodyResolver.resolve();
                 } catch (Exception e) {
                     message = new Message() {{
-                        setBodyCommand(BodyCommand.UNKNOWN);
+                        setBodyCommand(BodyCommandEnum.UNKNOWN);
                     }};
                     e.printStackTrace();
                 }
@@ -91,7 +91,7 @@ public class PayloadResolver {
                 try {
                     if ((int) payloadMap.get("code") == 0) {
                         message = new Message() {{
-                            setBodyCommand(BodyCommand.AUTH_SUCCESS);
+                            setBodyCommand(BodyCommandEnum.AUTH_SUCCESS);
                         }};
                     }
                 } catch (Exception ignored) {
@@ -100,7 +100,7 @@ public class PayloadResolver {
             }
             default:
                 message = new Message() {{
-                    setBodyCommand(BodyCommand.UNKNOWN);
+                    setBodyCommand(BodyCommandEnum.UNKNOWN);
                 }};
 
         }

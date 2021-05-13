@@ -1,6 +1,6 @@
 package net.dengzixu.java.body.resolver;
 
-import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.constant.BodyCommandEnum;
 import net.dengzixu.java.message.Message;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class UnknownBodyResolver extends BodyResolver {
     @Override
     public Message resolve() {
         return new Message() {{
-            setBodyCommand(BodyCommand.UNKNOWN);
+            setBodyCommand(BodyCommandEnum.UNKNOWN);
         }};
     }
 }

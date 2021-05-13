@@ -3,7 +3,7 @@ package net.dengzixu.java.constant;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum BodyCommand  {
+public enum BodyCommandEnum {
     DANMU_MSG("DANMU_MSG"),
     INTERACT_WORD("INTERACT_WORD"),
     SEND_GIFT("SEND_GIFT"),
@@ -16,20 +16,19 @@ public enum BodyCommand  {
 
     private final String command;
 
-    private static final Map<String, BodyCommand> enumMap = new HashMap<>();
+    private static final Map<String, BodyCommandEnum> enumMap = new HashMap<>();
 
     static {
-        for (BodyCommand e : values()) {
+        for (BodyCommandEnum e : values()) {
             enumMap.put(e.command(), e);
         }
     }
 
-    BodyCommand(String command) {
+    BodyCommandEnum(String command) {
         this.command = command;
     }
 
-
-    public static BodyCommand valueOf(String command,boolean f) {
+    public static BodyCommandEnum getEnum(String command) {
         return null == enumMap.get(command) ? UNKNOWN : enumMap.get(command);
     }
 

@@ -2,7 +2,7 @@ package net.dengzixu.java.body.resolver;
 
 import net.dengzixu.java.message.FansMedal;
 import net.dengzixu.java.message.UserInfo;
-import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.constant.BodyCommandEnum;
 import net.dengzixu.java.exception.ErrorCmdException;
 import net.dengzixu.java.message.Message;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SendGiftResolver extends BodyResolver {
-    private static final BodyCommand BODY_COMMAND = BodyCommand.SEND_GIFT;
+    private static final BodyCommandEnum BODY_COMMAND = BodyCommandEnum.SEND_GIFT;
 
     public SendGiftResolver(Map<String, Object> payloadMap) {
         super(payloadMap);

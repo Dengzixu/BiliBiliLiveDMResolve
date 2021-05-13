@@ -1,6 +1,6 @@
 package net.dengzixu.java;
 
-import net.dengzixu.java.constant.PacketOperation;
+import net.dengzixu.java.constant.PacketOperationEnum;
 import net.dengzixu.java.message.Message;
 import net.dengzixu.java.packet.Packet;
 import net.dengzixu.java.packet.PacketResolve;
@@ -84,7 +84,7 @@ public class PacketResolverTest {
 
         for (Packet packet : packetList) {
             Message message = new PayloadResolver(packet.getPayload(),
-                    PacketOperation.valueOf(packet.getOperation())).resolve();
+                    PacketOperationEnum.getEnum(packet.getOperation())).resolve();
 
             switch (message.getBodyCommand()) {
                 case DANMU_MSG:

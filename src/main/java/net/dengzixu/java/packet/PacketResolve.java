@@ -1,6 +1,6 @@
 package net.dengzixu.java.packet;
 
-import net.dengzixu.java.constant.PacketProtocolVersion;
+import net.dengzixu.java.constant.PacketProtocolVersionEnum;
 import net.dengzixu.java.exception.UnknownProtocolVersionException;
 import net.dengzixu.java.utils.ZlibUtil;
 
@@ -57,7 +57,7 @@ public class PacketResolve {
         }
 
         // 根据 Protocol Version 进行处理
-        switch (PacketProtocolVersion.valueOf(resultPacketList.get(0).getProtocolVersion())) {
+        switch (PacketProtocolVersionEnum.getEnum(resultPacketList.get(0).getProtocolVersion())) {
             // 如果协议版本为 0 或 1 直接返回
             case PROTOCOL_VERSION_0:
             case PROTOCOL_VERSION_1:

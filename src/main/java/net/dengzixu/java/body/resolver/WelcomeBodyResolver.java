@@ -2,14 +2,14 @@ package net.dengzixu.java.body.resolver;
 
 import net.dengzixu.java.message.FansMedal;
 import net.dengzixu.java.message.UserInfo;
-import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.constant.BodyCommandEnum;
 import net.dengzixu.java.exception.ErrorCmdException;
 import net.dengzixu.java.message.Message;
 
 import java.util.Map;
 
 public class WelcomeBodyResolver extends BodyResolver {
-    private static final BodyCommand BODY_COMMAND = BodyCommand.INTERACT_WORD;
+    private static final BodyCommandEnum BODY_COMMAND = BodyCommandEnum.INTERACT_WORD;
 
     public WelcomeBodyResolver(Map<String, Object> payloadMap) {
         super(payloadMap);

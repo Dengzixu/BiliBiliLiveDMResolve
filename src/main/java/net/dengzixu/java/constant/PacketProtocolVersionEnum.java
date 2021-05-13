@@ -3,7 +3,7 @@ package net.dengzixu.java.constant;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum PacketProtocolVersion {
+public enum PacketProtocolVersionEnum {
     /**
      * 协议版本
      * 0: JSON 	            JSON纯文本，可以直接通过 JSON.stringify 解析
@@ -18,24 +18,24 @@ public enum PacketProtocolVersion {
 
     private final Short packetProtocolVersion;
 
-    private static final Map<Short, PacketProtocolVersion> enumMap = new HashMap<>();
+    private static final Map<Short, PacketProtocolVersionEnum> enumMap = new HashMap<>();
 
     static {
-        for (PacketProtocolVersion e : values()) {
+        for (PacketProtocolVersionEnum e : values()) {
             enumMap.put(e.version(), e);
         }
     }
 
-    PacketProtocolVersion(Short packetProtocolVersion) {
+    PacketProtocolVersionEnum(Short packetProtocolVersion) {
         this.packetProtocolVersion = packetProtocolVersion;
     }
 
-    public static PacketProtocolVersion valueOf(short version) {
+    public static PacketProtocolVersionEnum getEnum(short version) {
         return null == enumMap.get(version) ? PROTOCOL_VERSION_UNKNOWN : enumMap.get(version);
     }
 
-    public static PacketProtocolVersion valueOf(int version) {
-        return valueOf((short) version);
+    public static PacketProtocolVersionEnum getEnum(int version) {
+        return getEnum((short) version);
     }
 
     public Short version() {

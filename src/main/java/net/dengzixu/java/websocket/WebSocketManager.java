@@ -3,8 +3,8 @@ package net.dengzixu.java.websocket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.constant.Constant;
-import net.dengzixu.java.constant.PacketOperation;
-import net.dengzixu.java.constant.PacketProtocolVersion;
+import net.dengzixu.java.constant.PacketOperationEnum;
+import net.dengzixu.java.constant.PacketProtocolVersionEnum;
 import net.dengzixu.java.message.Message;
 import net.dengzixu.java.packet.*;
 import net.dengzixu.java.payload.AuthPayload;
@@ -95,8 +95,8 @@ public class WebSocketManager {
         heartbeatTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                byte[] bytes = new PacketBuilder(PacketProtocolVersion.PROTOCOL_VERSION_1.version(),
-                        PacketOperation.OPERATION_2.operation(),
+                byte[] bytes = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1.version(),
+                        PacketOperationEnum.OPERATION_2.operation(),
                         "[object Object]").buildArrays();
                 webSocket.send(new ByteString(bytes));
             }
@@ -148,7 +148,7 @@ public class WebSocketManager {
                 if (packets.size() > 0) {
                     for (Packet packet : packets) {
                         Message message = new PayloadResolver(packet.getPayload(),
-                                PacketOperation.valueOf(packet.getOperation())).resolve();
+                                PacketOperationEnum.getEnum(packet.getOperation())).resolve();
 
                         switch (message.getBodyCommand()) {
                             case DANMU_MSG:
@@ -184,8 +184,8 @@ public class WebSocketManager {
                 }
 
                 if (null != payloadString) {
-                    byte[] packetArray = new PacketBuilder(PacketProtocolVersion.PROTOCOL_VERSION_1.version(),
-                            PacketOperation.OPERATION_7.operation(),
+                    byte[] packetArray = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1.version(),
+                            PacketOperationEnum.OPERATION_7.operation(),
                             payloadString).buildArrays();
 
                     webSocket.send(new ByteString(packetArray));

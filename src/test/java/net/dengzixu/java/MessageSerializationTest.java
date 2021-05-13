@@ -2,7 +2,7 @@ package net.dengzixu.java;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.constant.BodyCommandEnum;
 import net.dengzixu.java.message.Message;
 import net.dengzixu.java.message.FansMedal;
 import net.dengzixu.java.message.UserInfo;
@@ -19,7 +19,7 @@ public class MessageSerializationTest {
     public void init() {
         message = new Message() {{
             setContent(new HashMap<String, Object>());
-            setBodyCommand(BodyCommand.DANMU_MSG);
+            setBodyCommand(BodyCommandEnum.DANMU_MSG);
             setFansMedal(new FansMedal());
             setUserInfo(new UserInfo());
         }};

@@ -1,13 +1,13 @@
 package net.dengzixu.java.message;
 
-import net.dengzixu.java.constant.BodyCommand;
+import net.dengzixu.java.constant.BodyCommandEnum;
 
 import java.util.HashMap;
 
 public class Message {
     public HashMap<String, Object> content;
 
-    public BodyCommand bodyCommand;
+    public BodyCommandEnum bodyCommandEnum;
 
     public UserInfo userInfo;
     public FansMedal fansMedal;
@@ -20,12 +20,12 @@ public class Message {
         this.content = content;
     }
 
-    public BodyCommand getBodyCommand() {
-        return bodyCommand;
+    public BodyCommandEnum getBodyCommand() {
+        return bodyCommandEnum;
     }
 
-    public void setBodyCommand(BodyCommand bodyCommand) {
-        this.bodyCommand = bodyCommand;
+    public void setBodyCommand(BodyCommandEnum bodyCommandEnum) {
+        this.bodyCommandEnum = bodyCommandEnum;
     }
 
     public UserInfo getUserInfo() {
@@ -48,7 +48,7 @@ public class Message {
     public String toString() {
         return "Message{" +
                 "content=" + content +
-                ", bodyCommand=" + bodyCommand +
+                ", bodyCommand=" + bodyCommandEnum +
                 ", userInfo=" + userInfo +
                 ", fansMedal=" + fansMedal +
                 '}';
