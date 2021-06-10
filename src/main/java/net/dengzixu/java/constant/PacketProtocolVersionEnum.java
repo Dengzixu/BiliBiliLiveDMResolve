@@ -13,6 +13,7 @@ public enum PacketProtocolVersionEnum {
     PROTOCOL_VERSION_0((short) 0),
     PROTOCOL_VERSION_1((short) 1),
     PROTOCOL_VERSION_2((short) 2),
+    PROTOCOL_VERSION_3((short) 3),
 
     PROTOCOL_VERSION_UNKNOWN((short) -1);
 

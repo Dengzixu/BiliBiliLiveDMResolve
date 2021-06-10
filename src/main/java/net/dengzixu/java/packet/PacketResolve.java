@@ -2,6 +2,7 @@ package net.dengzixu.java.packet;
 
 import net.dengzixu.java.constant.PacketProtocolVersionEnum;
 import net.dengzixu.java.exception.UnknownProtocolVersionException;
+import net.dengzixu.java.utils.BrotliUtil;
 import net.dengzixu.java.utils.ZlibUtil;
 
 import java.nio.ByteBuffer;
@@ -63,11 +64,19 @@ public class PacketResolve {
             case PROTOCOL_VERSION_1:
                 break;
             // 如果协议版本为 2 就解压一下
-            case PROTOCOL_VERSION_2:
+            case PROTOCOL_VERSION_2: {
                 byte[] compressedData = ZlibUtil.inflate(resultPacketList.get(0).getPayload());
                 // 递归一把梭
                 resultPacketList = new PacketResolve(compressedData).getPacketList();
                 break;
+            }
+            case PROTOCOL_VERSION_3: {//                System.out.println("PROTOCOL_VERSION_3 无法处理");
+                byte[] compressedData = BrotliUtil.unCompress(resultPacketList.get(0).getPayload());
+                // 递归一把梭
+                System.out.println(new String(compressedData));
+                resultPacketList = new PacketResolve(compressedData).getPacketList();
+                break;
+            }
             default:
                 throw new UnknownProtocolVersionException();
         }
