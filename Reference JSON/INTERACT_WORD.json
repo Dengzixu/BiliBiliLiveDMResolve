@@ -4,6 +4,9 @@
         "uid": 4283693,
         "uname": "too_long_name",
         "uname_color": "",
+        // 1 普通用户
+        // 3 可能是老爷
+        // 5 可能是舰长
         "identities": [
             5,
             3,
