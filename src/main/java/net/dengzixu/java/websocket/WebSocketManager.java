@@ -117,13 +117,8 @@ public class WebSocketManager {
             @Override
             public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
                 stopHeartbeat();
-                super.onClosed(webSocket, code, reason);
-            }
-
-            @Override
-            public void onClosing(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
                 connect = false;
-                super.onClosing(webSocket, code, reason);
+                super.onClosed(webSocket, code, reason);
             }
 
             @Override
@@ -133,12 +128,6 @@ public class WebSocketManager {
                 stopHeartbeat();
                 close();
                 super.onFailure(webSocket, t, response);
-            }
-
-            @Override
-            public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-                System.out.println("onMessage Bytes:" + text);
-                super.onMessage(webSocket, text);
             }
 
             @Override
@@ -173,26 +162,26 @@ public class WebSocketManager {
 
             @Override
             public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-                System.out.println("建立链接");
+                System.out.println("准备建立 Websocket 链接...");
 
                 // 构建认证 payload
                 AuthPayload authPayload = new AuthPayload();
                 authPayload.setRoomid(roomId);
                 authPayload.setKey(GetAuthToken.get(roomId));
 
-                String payloadString = null;
+                String payloadString;
 
                 try {
                     payloadString = new ObjectMapper().writeValueAsString(authPayload);
                 } catch (JsonProcessingException ignored) {
-
+                    close();
+                    return;
                 }
 
                 if (null != payloadString) {
                     byte[] packetArray = new PacketBuilder(PacketProtocolVersionEnum.PROTOCOL_VERSION_1,
                             PacketOperationEnum.OPERATION_7,
                             payloadString).buildArrays();
-
                     webSocket.send(new ByteString(packetArray));
                 }
 

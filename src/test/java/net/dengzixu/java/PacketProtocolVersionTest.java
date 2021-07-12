@@ -23,7 +23,8 @@ public class PacketProtocolVersionTest {
                 {0, PacketProtocolVersionEnum.PROTOCOL_VERSION_0},
                 {1, PacketProtocolVersionEnum.PROTOCOL_VERSION_1},
                 {2, PacketProtocolVersionEnum.PROTOCOL_VERSION_2},
-                {3, PacketProtocolVersionEnum.PROTOCOL_VERSION_UNKNOWN}
+                {3, PacketProtocolVersionEnum.PROTOCOL_VERSION_3},
+                {-1, PacketProtocolVersionEnum.PROTOCOL_VERSION_UNKNOWN}
         });
     }
 
