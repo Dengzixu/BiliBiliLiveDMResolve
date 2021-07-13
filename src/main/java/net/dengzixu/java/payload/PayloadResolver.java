@@ -98,11 +98,11 @@ public class PayloadResolver {
                 }
                 break;
             }
-            default:
+            default: {
                 message = new Message() {{
                     setBodyCommand(BodyCommandEnum.UNKNOWN);
                 }};
-
+            }
         }
         return message;
     }

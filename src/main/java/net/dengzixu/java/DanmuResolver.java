@@ -1,27 +1,39 @@
-package net.dengzixu.java.websocket;
+package net.dengzixu.java;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.constant.Constant;
 import net.dengzixu.java.constant.PacketOperationEnum;
 import net.dengzixu.java.constant.PacketProtocolVersionEnum;
+import net.dengzixu.java.listener.Listener;
 import net.dengzixu.java.message.Message;
-import net.dengzixu.java.packet.*;
+import net.dengzixu.java.packet.Packet;
+import net.dengzixu.java.packet.PacketBuilder;
+import net.dengzixu.java.packet.PacketResolve;
 import net.dengzixu.java.payload.AuthPayload;
 import net.dengzixu.java.payload.PayloadResolver;
 import net.dengzixu.java.third.api.GetAuthToken;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocketListener;
 import okio.ByteString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import okhttp3.WebSocket;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Deprecated
-public class WebSocketManager {
-    private static WebSocketManager webSocketManager = null;
+
+public class DanmuResolver {
+    private final long roomId;
+    private static DanmuResolver danmuResolver = null;
+
+    private List<Listener> listenerList = new ArrayList<>();
 
     private OkHttpClient okHttpClient;
     private Request request;
@@ -29,60 +41,38 @@ public class WebSocketManager {
 
     private Timer heartbeatTimer;
 
-    private boolean connect;
-
-    private final long roomId;
-
-    private WebSocketManager(long roomId) {
+    private DanmuResolver(long roomId) {
         this.roomId = roomId;
+
+        this.initWebsocket();
     }
 
-    /**
-     * getInstance
-     *
-     * @param roomId 房间ID
-     * @return WebSocketManager
-     */
-    public static WebSocketManager getInstance(long roomId) {
-        if (null == webSocketManager) {
-            synchronized (WebSocketManager.class) {
-                if (null == webSocketManager) {
-                    webSocketManager = new WebSocketManager(roomId);
+    public static DanmuResolver getInstance(long roomId) {
+        if (null == danmuResolver) {
+            synchronized (DanmuResolver.class) {
+                if (danmuResolver == null) {
+                    danmuResolver = new DanmuResolver(roomId);
                 }
             }
         }
-        return webSocketManager;
+        return danmuResolver;
     }
 
-    /**
-     * 初始化
-     */
-    public void init() {
+    public void addListener(Listener listener) {
+        if (null != listener) {
+            listenerList.add(listener);
+        }
+    }
+
+    private void initWebsocket() {
         okHttpClient = new OkHttpClient.Builder()
                 .build();
 
         request = new Request.Builder()
                 .url(Constant.BILIBILI_LIVE_WS_URL)
                 .build();
-    }
 
-    /**
-     * 建立链接
-     */
-    public void connect() {
         webSocket = okHttpClient.newWebSocket(request, createWebSocketListener());
-    }
-
-    public boolean sendMessage(String data) {
-        return webSocket.send(data);
-    }
-
-    public boolean sendMessage(ByteString data) {
-        return webSocket.send(data);
-    }
-
-    public void close() {
-        webSocket.close(1001, "");
     }
 
     /**
@@ -117,17 +107,11 @@ public class WebSocketManager {
         return new WebSocketListener() {
             @Override
             public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-                stopHeartbeat();
-                connect = false;
                 super.onClosed(webSocket, code, reason);
             }
 
             @Override
             public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-                connect = false;
-                System.out.println("Websocket onFailure");
-                stopHeartbeat();
-                close();
                 super.onFailure(webSocket, t, response);
             }
 
@@ -144,11 +128,12 @@ public class WebSocketManager {
                             case DANMU_MSG:
                             case INTERACT_WORD:
                             case SEND_GIFT:
-                                System.out.println(message);
+                                listenerList.forEach((listener -> {
+                                    listener.onMessage(message);
+                                }));
                                 break;
                             case AUTH_SUCCESS:
                                 System.out.println("认证成功");
-                                connect = true;
                                 startHeartbeat();
                                 break;
                             case UNKNOWN:
@@ -157,15 +142,14 @@ public class WebSocketManager {
                         }
                     }
                 }
-
-                super.onMessage(webSocket, bytes);
             }
 
             @Override
             public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-                System.out.println("准备建立 Websocket 链接...");
+                this.onAuth(webSocket, response);
+            }
 
-                // 构建认证 payload
+            private void onAuth(@NotNull WebSocket webSocket, @NotNull Response response) {
                 AuthPayload authPayload = new AuthPayload();
                 authPayload.setRoomid(roomId);
                 authPayload.setKey(GetAuthToken.get(roomId));
@@ -175,7 +159,7 @@ public class WebSocketManager {
                 try {
                     payloadString = new ObjectMapper().writeValueAsString(authPayload);
                 } catch (JsonProcessingException ignored) {
-                    close();
+                    webSocket.close(1001, "");
                     return;
                 }
 
@@ -185,8 +169,6 @@ public class WebSocketManager {
                             payloadString).buildArrays();
                     webSocket.send(new ByteString(packetArray));
                 }
-
-                super.onOpen(webSocket, response);
             }
         };
     }

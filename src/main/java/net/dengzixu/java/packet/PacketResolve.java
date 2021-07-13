@@ -72,7 +72,6 @@ public class PacketResolve {
             case PROTOCOL_VERSION_3: {
                 byte[] compressedData = UncompressUtils.uncompress(resultPacketList.get(0).getPayload(), UncompressUtils.BROTLI);
                 // 递归一把梭
-                System.out.println(new String(compressedData));
                 resultPacketList = new PacketResolve(compressedData).getPacketList();
                 break;
             }
