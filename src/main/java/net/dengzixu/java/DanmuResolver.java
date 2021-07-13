@@ -33,7 +33,7 @@ public class DanmuResolver {
     private final long roomId;
     private static DanmuResolver danmuResolver = null;
 
-    private List<Listener> listenerList = new ArrayList<>();
+    private final List<Listener> listenerList = new ArrayList<>();
 
     private OkHttpClient okHttpClient;
     private Request request;
@@ -62,6 +62,10 @@ public class DanmuResolver {
         if (null != listener) {
             listenerList.add(listener);
         }
+    }
+
+    public void removeListener(Listener listener) {
+        this.listenerList.remove(listener);
     }
 
     private void initWebsocket() {
