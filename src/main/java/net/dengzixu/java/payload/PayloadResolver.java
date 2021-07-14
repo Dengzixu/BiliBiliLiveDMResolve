@@ -58,7 +58,7 @@ public class PayloadResolver {
                         bodyResolver = new DanmuBodyResolver(payloadMap);
                         break;
                     case INTERACT_WORD:
-                        bodyResolver = new WelcomeBodyResolver(payloadMap);
+                        bodyResolver = new InteractWordResolver(payloadMap);
                         break;
                     case SEND_GIFT:
                         bodyResolver = new SendGiftResolver(payloadMap);

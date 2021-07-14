@@ -6,12 +6,13 @@ import net.dengzixu.java.constant.BodyCommandEnum;
 import net.dengzixu.java.exception.ErrorCmdException;
 import net.dengzixu.java.message.Message;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public class WelcomeBodyResolver extends BodyResolver {
+public class InteractWordResolver extends BodyResolver {
     private static final BodyCommandEnum BODY_COMMAND = BodyCommandEnum.INTERACT_WORD;
 
-    public WelcomeBodyResolver(Map<String, Object> payloadMap) {
+    public InteractWordResolver(Map<String, Object> payloadMap) {
         super(payloadMap);
 
         if (!BODY_COMMAND.toString().equals(this.payloadCmd)) {
@@ -25,6 +26,10 @@ public class WelcomeBodyResolver extends BodyResolver {
         message.setBodyCommand(BODY_COMMAND);
 
         final Map<String, Object> dataMap = (Map<String, Object>) payloadMap.get("data");
+
+        message.setContent(new HashMap<>() {{
+            put("msg_type", dataMap.get("msg_type"));
+        }});
 
         // 用户信息
         message.setUserInfo(new UserInfo() {{
