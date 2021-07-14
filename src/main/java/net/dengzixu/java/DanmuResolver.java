@@ -27,11 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class DanmuResolver {
     private final long roomId;
     private static DanmuResolver danmuResolver = null;
+
+    private boolean allowReconnect = false;
+    private boolean connect = false;
 
     private final List<Listener> listenerList = new ArrayList<>();
 
@@ -65,7 +69,9 @@ public class DanmuResolver {
     }
 
     public void removeListener(Listener listener) {
-        this.listenerList.remove(listener);
+        if (null != listener) {
+            this.listenerList.remove(listener);
+        }
     }
 
     private void initWebsocket() {
@@ -111,12 +117,21 @@ public class DanmuResolver {
         return new WebSocketListener() {
             @Override
             public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-                super.onClosed(webSocket, code, reason);
+                stopHeartbeat();
+                connect = false;
             }
 
             @Override
             public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-                super.onFailure(webSocket, t, response);
+                webSocket.close(1001, "");
+
+                stopHeartbeat();
+                connect = false;
+
+                // 尝试重连
+                if (allowReconnect) {
+                    initWebsocket();
+                }
             }
 
             @Override
