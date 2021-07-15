@@ -125,6 +125,8 @@ public class DanmuResolver {
             public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
                 webSocket.close(1001, "");
 
+                System.out.println("onFailure");
+
                 stopHeartbeat();
                 connect = false;
 

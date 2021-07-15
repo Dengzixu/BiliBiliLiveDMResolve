@@ -9,19 +9,19 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-public class GetAuthToken {
-    public static final String URL = "https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id=";
+public class AccountInfo {
+    private static final String URL = "https://api.bilibili.com/x/space/acc/info?mid=";
 
-    String data = null;
 
-    public static String get(long roomId) {
+    public String getFace(long uid) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
 
         Request request = new Request.Builder()
                 .get()
-                .url(URL + roomId)
+                .url(URL + uid)
                 .build();
+
         try {
             Response response = okHttpClient.newCall(request).execute();
             if (response.code() != 200) {
@@ -34,7 +34,6 @@ public class GetAuthToken {
                 return null;
             }
 
-//            System.out.println(body);
 
             ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,12 +41,10 @@ public class GetAuthToken {
 
             Map<String, Object> dataMap = (Map<String, Object>) bodyMap.get("data");
 
-            return (String) dataMap.get("token");
-//            System.out.println(Objects.requireNonNull(response.body()).string());
+            return (String) dataMap.get("face");
         } catch (NullPointerException | IOException e) {
             return null;
         }
-
 
     }
 }
