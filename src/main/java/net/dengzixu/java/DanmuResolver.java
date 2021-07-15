@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.java.constant.Constant;
 import net.dengzixu.java.constant.PacketOperationEnum;
 import net.dengzixu.java.constant.PacketProtocolVersionEnum;
+import net.dengzixu.java.filter.Filter;
 import net.dengzixu.java.listener.Listener;
 import net.dengzixu.java.message.Message;
 import net.dengzixu.java.packet.Packet;
@@ -22,15 +23,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import okhttp3.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class DanmuResolver {
+    private final Logger logger = LoggerFactory.getLogger(DanmuResolver.class);
+
     private final long roomId;
     private static DanmuResolver danmuResolver = null;
 
@@ -38,6 +40,7 @@ public class DanmuResolver {
     private boolean connect = false;
 
     private final List<Listener> listenerList = new ArrayList<>();
+    private final List<Filter> filterList = new ArrayList<>();
 
     private OkHttpClient okHttpClient;
     private Request request;
@@ -62,16 +65,32 @@ public class DanmuResolver {
         return danmuResolver;
     }
 
-    public void addListener(Listener listener) {
+    public DanmuResolver addListener(Listener listener) {
         if (null != listener) {
             listenerList.add(listener);
         }
+        return this;
     }
 
-    public void removeListener(Listener listener) {
+    public DanmuResolver removeListener(Listener listener) {
         if (null != listener) {
             this.listenerList.remove(listener);
         }
+        return this;
+    }
+
+    public DanmuResolver addFilter(Filter filter) {
+        if (null != filter) {
+            filterList.add(filter);
+        }
+        return this;
+    }
+
+    public DanmuResolver removeFilter(Filter filter) {
+        if (null != filter) {
+            filterList.remove(filter);
+        }
+        return this;
     }
 
     private void initWebsocket() {
@@ -123,9 +142,7 @@ public class DanmuResolver {
 
             @Override
             public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-                webSocket.close(1001, "");
-
-                System.out.println("onFailure");
+                t.printStackTrace();
 
                 stopHeartbeat();
                 connect = false;
@@ -142,8 +159,12 @@ public class DanmuResolver {
 
                 if (packets.size() > 0) {
                     for (Packet packet : packets) {
-                        Message message = new PayloadResolver(packet.getPayload(),
+                        final Message message = new PayloadResolver(packet.getPayload(),
                                 PacketOperationEnum.getEnum(packet.getOperation())).resolve();
+
+                        filterList.forEach(filter -> {
+                            filter.doFilter(message);
+                        });
 
                         switch (message.getBodyCommand()) {
                             case DANMU_MSG:
@@ -154,7 +175,7 @@ public class DanmuResolver {
                                 }));
                                 break;
                             case AUTH_SUCCESS:
-                                System.out.println("认证成功");
+                                logger.info("身份认证成功");
                                 startHeartbeat();
                                 break;
                             case UNKNOWN:
@@ -167,10 +188,14 @@ public class DanmuResolver {
 
             @Override
             public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
+                logger.info("尝试链接弹幕服务器...");
+
                 this.onAuth(webSocket, response);
             }
 
             private void onAuth(@NotNull WebSocket webSocket, @NotNull Response response) {
+                logger.info("进行身份认证...");
+
                 AuthPayload authPayload = new AuthPayload();
                 authPayload.setRoomid(roomId);
                 authPayload.setKey(GetAuthToken.get(roomId));
